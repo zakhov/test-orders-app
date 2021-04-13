@@ -67,8 +67,7 @@
   "lint-staged": {
     "**/*.ts": [
       "eslint --fix",
-      "pretty-quick --staged",
-      "git add"
+      "pretty-quick --staged"
     ]
   },
   "jest": {
