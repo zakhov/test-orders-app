@@ -8,6 +8,9 @@ import {
   NotFoundException,
   Post,
   Body,
+  Put,
+  Query,
+  Delete,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDTO } from './dto/create-order.dto';
@@ -22,7 +25,7 @@ export class OrdersController {
   async addOrder(@Res() res, @Body() createOrderDTO: CreateOrderDTO) {
     const newOrder = await this.ordersService.addOrder(createOrderDTO);
     return res.status(HttpStatus.OK).json({
-      message: 'Order has been submitted successfully!',
+      message: 'Order has been created successfully!',
       order: newOrder,
     });
   }
@@ -37,7 +40,41 @@ export class OrdersController {
     return res.status(HttpStatus.OK).json(order);
   }
 
-  // Fetch all posts
+  @Put('/edit')
+  async editOrder(
+    @Res() res,
+    @Query('orderID', new ValidateObjectId()) orderID,
+    @Body() createOrderDTO: CreateOrderDTO,
+  ) {
+    const editedOrder = await this.ordersService.updateOrder(
+      orderID,
+      createOrderDTO,
+    );
+    if (!editedOrder) {
+      throw new NotFoundException('Order does not exist!');
+    }
+    return res.status(HttpStatus.OK).json({
+      message: 'Order has been successfully updated',
+      post: editedOrder,
+    });
+  }
+  // Cancels a order using ID
+  @Delete('/delete')
+  async deleteOrder(
+    @Res() res,
+    @Query('orderID', new ValidateObjectId()) orderID,
+  ) {
+    const deletedOrder = await this.ordersService.deleteOrder(orderID);
+    if (!deletedOrder) {
+      throw new NotFoundException('Order does not exist!');
+    }
+    return res.status(HttpStatus.OK).json({
+      message: 'Order has been deleted!',
+      post: deletedOrder,
+    });
+  }
+
+  // Fetch all orders
   @Get('orders')
   async getOrders(@Res() res) {
     const orders = await this.ordersService.getOrders();
