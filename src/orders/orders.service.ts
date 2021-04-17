@@ -26,7 +26,7 @@ export class OrdersService {
     return orders;
   }
 
-  async editOrder(orderID, createOrderDTO: CreateOrderDTO): Promise<Order> {
+  async updateOrder(orderID, createOrderDTO: CreateOrderDTO): Promise<Order> {
     const editedOrder = await this.orderModel.findByIdAndUpdate(
       orderID,
       createOrderDTO,
